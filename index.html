@@ -1,0 +1,51 @@
+<script src="jquery-2.1.4.min.js"></script>
+<script type="text/javascript">
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+$(document).ready(function() { search() })
+
+function search() { 
+
+
+  tag = getParameterByName("tag")
+  $("#tag").text(tag)
+
+  console.log(tag)
+
+  run_SO_call("top-askers", tag)
+  run_SO_call("top-answerers", tag)
+}
+
+function display_SO_data(verb, data) { 
+  console.log(data)
+  $.each(data.items, function(d, i) { 
+    $("#"+verb).append( i.user.display_name + "</br>")
+  })
+} 
+
+function run_SO_call(verb, tag) { 
+
+  url = "https://api.stackexchange.com/2.2/tags/"+tag+"/"+verb+"/all_time?site=stackoverflow"
+
+  $.ajax({
+      url: url,
+      success: function(data, s, x){
+        display_SO_data(verb, data)
+      }
+  });
+  }
+
+</script>
+
+<div id="results">
+<div id="tagheader"><h1>Results for Tag <span id="tag"></span></div>
+<table><tr><td>
+
+<div id="top-askers"><h2>Top Askers</h2></div></td><td><div id="top-answerers"><h2>Top Answerers</h2></div></td></tr></table>
+</div>
