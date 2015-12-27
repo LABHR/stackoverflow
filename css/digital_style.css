@@ -3,5 +3,13 @@
 }
 
 h1.section-heading { 
-  margin-top: 40px;
+  margin-top: 2em;
+} 
+
+.loading { 
+  margin-bottom: 1em
+} 
+
+.loading::before { 
+  content: "Loading..."
 } 
