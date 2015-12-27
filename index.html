@@ -2,50 +2,95 @@
 <script type="text/javascript">
 
 function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
+  return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-$(document).ready(function() { search() })
-
 function search() { 
-
-
   tag = getParameterByName("tag")
-  $("#tag").text(tag)
 
-  console.log(tag)
+  if (tag) { 
+  
+    $("#display_tag").text("Results for "+tag)
 
-  run_SO_call("top-askers", tag)
-  run_SO_call("top-answerers", tag)
+    console.log(tag)
+
+    run_SO_call("top-askers", tag)
+    run_SO_call("top-answerers", tag)
+  } 
 }
 
 function display_SO_data(verb, data) { 
   console.log(data)
   $.each(data.items, function(d, i) { 
-    $("#"+verb).append( i.user.display_name + "</br>")
+    flair = '<a href="http://stackoverflow.com/users/'+i.user.user_id+'"><img src="http://stackoverflow.com/users/flair/'+i.user.user_id+'.png?theme=clean" width="208" height="58" alt="" /></a>'
+    $("#"+verb).append(flair)
   })
+  $("#"+verb+"_loading").hide()
+  $("#"+verb).show()
 } 
 
 function run_SO_call(verb, tag) { 
-
-  url = "https://api.stackexchange.com/2.2/tags/"+tag+"/"+verb+"/all_time?site=stackoverflow"
-
+  url = "https://api.stackexchange.com/2.2/tags/"+tag+"/"+verb+"/all_time?page=1&pagesize=100&site=stackoverflow"
+  $("#"+verb+"_loading").show()
   $.ajax({
-      url: url,
-      success: function(data, s, x){
-        display_SO_data(verb, data)
-      }
+    url: url,
+    success: function(data, s, x){
+      display_SO_data(verb, data)
+    }
   });
-  }
+}
+
+$(document).ready(function() { 
+  
+  $("#results").hide()
+
+
+  $("#search").submit(function(event) { 
+    event.preventDefault();
+    tag = $("#tag").val()
+    window.location.search = "tag="+tag
+  })
+  
+  search() 
+
+})
 
 </script>
+<style>
+  .loading::before { 
+    content: "loading..."
+  }
+  .section { 
+    width: 450
+  }
+</style>
+<div id="search">
+  <form>
+    See statistics for tag:  
+    <input type="text" id="tag" placeholder="e.g. jquery">
+    <input type="submit">
+  </form>
+</div>
 
 <div id="results">
-<div id="tagheader"><h1>Results for Tag <span id="tag"></span></div>
-<table><tr><td>
+  <h1 id="display_tag"></h1>
 
-<div id="top-askers"><h2>Top Askers</h2></div></td><td><div id="top-answerers"><h2>Top Answerers</h2></div></td></tr></table>
+  <table>
+    <tr>
+      <td> 
+        <div class="section" id="top-answerers">
+          <h2>Top Answerers</h2>
+          <div id="top-askers_loading" class="loading"></div>
+        </div>
+      </td>
+      <td>
+        <div class="section" id="top-askers">
+          <h2>Top Askers</h2>
+          <div id="top-askers_loading" class="loading"></div>
+        </div>
+      </td>
+    </tr>
+  </table>
 </div>
