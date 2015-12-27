@@ -19,9 +19,14 @@ function search() {
 }
 
 function display_SO_data(verb, data) { 
-  console.log(data)
   $.each(data.items, function(d, i) { 
-    flair = '<a href="http://stackoverflow.com/users/'+i.user.user_id+'"><img src="http://stackoverflow.com/users/flair/'+i.user.user_id+'.png?theme=clean" width="208" height="58" alt="" /></a>'
+    flair = '<a href="http://stackoverflow.com/users/'
+      + i.user.user_id
+      + '" target="_blank"><img src="http://stackoverflow.com/users/flair/'
+      + i.user.user_id
+      + '.png?theme=clean" width="208" height="58" alt="Flair for user '
+      + i.user.display_name
+      + '" /></a>'
     $("#"+verb).append(flair)
   })
 } 
