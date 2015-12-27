@@ -1,96 +1,58 @@
-<script src="jquery-2.1.4.min.js"></script>
-<script type="text/javascript">
+<!DOCTYPE html>
+<html lang="en">
+<head>
 
-function getParameterByName(name) {
-  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
-  return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
+  <meta charset="utf-8">
+  <title>StackOverflow Hat Rack - Top Answerers and Askers</title>
 
-function search() { 
-  tag = getParameterByName("tag")
+  <script src="js/jquery-2.1.4.min.js"></script>
+  <script src="js/beepboop.js"></script>
+  <link rel="stylesheet" href="css/normalize.css" />
+  <link rel="stylesheet" href="css/skeleton.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" />
+  <link rel="stylesheet" href="css/digital_style.css" />
 
-  if (tag) { 
-  
-    $("#display_tag").text("Results for "+tag)
+</head>
 
-    console.log(tag)
+<body>
 
-    run_SO_call("top-askers", tag)
-    run_SO_call("top-answerers", tag)
-  } 
-}
-
-function display_SO_data(verb, data) { 
-  console.log(data)
-  $.each(data.items, function(d, i) { 
-    flair = '<a href="http://stackoverflow.com/users/'+i.user.user_id+'"><img src="http://stackoverflow.com/users/flair/'+i.user.user_id+'.png?theme=clean" width="208" height="58" alt="" /></a>'
-    $("#"+verb).append(flair)
-  })
-  $("#"+verb+"_loading").hide()
-  $("#"+verb).show()
-} 
-
-function run_SO_call(verb, tag) { 
-  url = "https://api.stackexchange.com/2.2/tags/"+tag+"/"+verb+"/all_time?page=1&pagesize=100&site=stackoverflow"
-  $("#"+verb+"_loading").show()
-  $.ajax({
-    url: url,
-    success: function(data, s, x){
-      display_SO_data(verb, data)
-    }
-  });
-}
-
-$(document).ready(function() { 
-  
-  $("#results").hide()
+  <div class="section">
+    <div class="container">
+      <h1 class="section-heading">Stack Overflow Hat Rack</h1>
+      <p class="section-description">Use the <a href="https://api.stackexchange.com/docs">Stack Overflow API</a> to display the most active users for a given tag.</p>
+      <div id="search">
+        <form>
+          See statistics for tag:  
+          <input type="text" id="tag" placeholder="e.g. jquery">
+          <input type="submit">
+        </form>
+      </div>
+    </div>
+  </div>
 
 
-  $("#search").submit(function(event) { 
-    event.preventDefault();
-    tag = $("#tag").val()
-    window.location.search = "tag="+tag
-  })
-  
-  search() 
+  <div id="loading" class="section">
 
-})
+  </div>
 
-</script>
-<style>
-  .loading::before { 
-    content: "loading..."
-  }
-  .section { 
-    width: 450
-  }
-</style>
-<div id="search">
-  <form>
-    See statistics for tag:  
-    <input type="text" id="tag" placeholder="e.g. jquery">
-    <input type="submit">
-  </form>
-</div>
-
-<div id="results">
-  <h1 id="display_tag"></h1>
-
-  <table>
-    <tr>
-      <td> 
-        <div class="section" id="top-answerers">
-          <h2>Top Answerers</h2>
-          <div id="top-askers_loading" class="loading"></div>
+  <div id="results" style="display:none" class="section">
+    <div class="container">
+      <h2 class="section-heading" id="display_tag"></h1>
+      <div class="row">
+        <div class="one-half column" id="top-answerers">
+          <h3>Top Answerers</h3>
         </div>
-      </td>
-      <td>
-        <div class="section" id="top-askers">
-          <h2>Top Askers</h2>
-          <div id="top-askers_loading" class="loading"></div>
+        <div class="one-half column" id="top-askers">
+          <h3>Top Askers</h3>
         </div>
-      </td>
-    </tr>
-  </table>
-</div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <div class="section">
+     This application is part of the <a href="https://labhr.github.io">LABHR</a> project.
+  </div>
+</body>
