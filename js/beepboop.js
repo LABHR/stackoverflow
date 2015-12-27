@@ -11,7 +11,6 @@ function search() {
   
     $("#display_tag").text("Results for "+tag)
 
-    console.log(tag)
 
     run_SO_call("top-askers", tag)
     run_SO_call("top-answerers", tag)
