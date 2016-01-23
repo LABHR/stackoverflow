@@ -10,7 +10,7 @@ function search() {
   if (tag) { 
   
     $("#display_tag").text("Results for "+tag)
-
+    document.getElementById("SO_Link").setAttribute("href", "http://stackoverflow.com/tags/"+tag+"/topusers")
 
     run_SO_call("top-askers", tag)
     run_SO_call("top-answerers", tag)
