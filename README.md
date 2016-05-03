@@ -1,5 +1,7 @@
 # Stack Overflow Hat Rack
 
+[https://labhr.github.io/stackoverflow/](https://labhr.github.io/stackoverflow/)
+
 Uses the Stack Overflow API to display the most active users for a given tag.
 
 ## Tech Stack
